@@ -41,6 +41,7 @@
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let partialLine = '';
+            const removeLeadingNulls = (line) => line.slice(8); // Remove the first 8 bytes (7 bytes + 1 for the newline character)
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -55,7 +56,7 @@
                 lines.forEach(line => {
                     const logLine = document.createElement('div');
                     logLine.classList.add('log-container');
-                    logLine.textContent = line;
+                    logLine.textContent = removeLeadingNulls(line);
                     container.appendChild(logLine);
                     logLine.scrollIntoView({ behavior: 'smooth' });
                 });
@@ -65,15 +66,17 @@
             if (partialLine) {
                 const logLine = document.createElement('div');
                 logLine.classList.add('log-container');
-                logLine.textContent = partialLine;
+                logLine.textContent = removeLeadingNulls(partialLine);
                 container.appendChild(logLine);
                 logLine.scrollIntoView({ behavior: 'smooth' });
             }
         };
 
-        fetch(`/logs/${id}`)
+        const fetchLog = () => fetch(`/logs/${id}`)
             .then(response => processStream(response))
-            .catch(error => console.error('Error fetching logs:', error));
+            .catch(error => console.error('Error fetching logs:', error))
+            .finally(() => setTimeout(fetchLog, 1000)); // Retry after 1 second
+        fetchLog();
     </script>
 </body>
 </html>
