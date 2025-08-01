@@ -23,20 +23,7 @@ JWT_SECRET=自定义JWT密钥
 
 ### 2. 创建 Docker Compose 配置
 
-使用现有的 `docker-compose.yml` 文件：
-
-```yaml
-services:
-  nginx:
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "9999:80"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-```
+使用现有的 `docker-compose.yml` 文件
 
 ### 3. 准备 Lua 脚本
 
