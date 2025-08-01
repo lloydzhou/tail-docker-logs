@@ -1,0 +1,10 @@
+services:
+  nginx:
+    restart: always
+    image: openresty/openresty:alpine
+    ports:
+      - "9999:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./public:/var/www/html
